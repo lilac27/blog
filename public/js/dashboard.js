@@ -14,7 +14,13 @@ const newFormHandler = async (event) => {
     });
 
     if (response.ok) {
-      document.location.replace('/dashboard');
+      // Fetch the updated list of posts from the server
+      const updatedPostsResponse = await fetch('/api/posts');
+      const updatedPosts = await updatedPostsResponse.json();
+
+
+      const renderedPosts = template({ post: updatedPosts });
+      document.querySelector('.post-list').innerHTML = renderedPosts;
     } else {
       alert('Failed to create post');
     }
