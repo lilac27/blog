@@ -18,7 +18,7 @@ const newFormHandler = async (event) => {
       const updatedPostsResponse = await fetch('/api/posts');
       const updatedPosts = await updatedPostsResponse.json();
 
-      const renderedPosts = template({ post: updatedPosts });
+      const renderedPosts = template({ posts: updatedPosts });
       document.querySelector('.post-list').innerHTML = renderedPosts;
     } else {
       alert('Failed to create post');
