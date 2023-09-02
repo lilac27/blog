@@ -46,6 +46,7 @@ document
   .querySelector('.new-post-form')
   .addEventListener('submit', newFormHandler);
 
-document
-  .querySelector('.post-text')
-  .addEventListener('click', delButtonHandler);
+  document.querySelectorAll('.btn-danger').forEach(button => {
+    button.addEventListener('click', delButtonHandler);
+  });
+  
