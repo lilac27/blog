@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Post, User } = require('../models');
+const { Post, User, Comment } = require('../models');
 const withAuth = require('../utils/auth');
 
 router.get('/', async (req, res) => {
@@ -11,9 +11,15 @@ router.get('/', async (req, res) => {
           model: User,
           attributes: ['name'],
         },
+        {
+          model: Comment,
+          include: [User],
+          attributes: ['text'],
+        }
       ],
     });
 
+    
     // Serialize data so the template can read it
     const posts = postData.map((Post) => Post.get({ plain: true }));
     console.log('posts:', posts); // Debugging line
@@ -28,27 +34,27 @@ router.get('/', async (req, res) => {
   }
 });
 
-// router.get('/Post/:id', async (req, res) => {
-//   try {
-//     const postData = await Post.findByPk(req.params.id, {
-//       include: [
-//         {
-//           model: User,
-//           attributes: ['name'],
-//         },
-//       ],
-//     });
+router.get('/Post/:id', async (req, res) => {
+  try {
+    const postData = await Post.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['name'],
+        },
+      ],
+    });
 
-//     const Post = postData.get({ plain: true });
+    const Post = postData.get({ plain: true });
 
-//     res.render('Post', {
-//       ...Post,
-//       logged_in: req.session.logged_in
-//     });
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+    res.render('Post', {
+      ...Post,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 // Use withAuth middleware to prevent access to route
 router.get('/dashboard', withAuth, async (req, res) => {
