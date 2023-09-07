@@ -18,7 +18,7 @@ button.forEach((element, number) => {
                 // Send a POST request to your API endpoint to create a new comment
                 const response = await fetch('/api/comments', {
                     method: 'POST',
-                    body: JSON.stringify({ text: commentText }), // Make sure to match your server's expected request body
+                    body: JSON.stringify({ text: commentText, post_id: element.id }), // Make sure to match your server's expected request body
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -28,8 +28,10 @@ button.forEach((element, number) => {
                     // Comment was successfully created
                     console.log('Comment posted successfully');
                     // You can optionally refresh the page or update the comment list here
+                    window.location.reload();
                 } else {
-                    console.error('Failed to post comment');
+                    const errorMessage = await response.text(); // Get error message from response body
+                    console.error('Failed to post comment:', errorMessage);
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -40,3 +42,6 @@ button.forEach((element, number) => {
         }
     });
 });
+
+
+
